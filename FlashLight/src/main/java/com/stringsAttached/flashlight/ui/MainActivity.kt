@@ -1,21 +1,27 @@
 package com.stringsAttached.flashlight.ui
 
+import android.Manifest
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.stringsAttached.flashlight.R
 import com.stringsAttached.flashlight.databinding.ActivityMainBinding
+import com.stringsAttached.flashlight.services.TorchService
 
 class MainActivity : AppCompatActivity() {
 
@@ -103,6 +109,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                1001
+            )
+        }
+        val intent = Intent(this.application, TorchService::class.java)
+        this.startService(intent)
+
         val isFlashAvailable = applicationContext.packageManager
             .hasSystemFeature(PackageManager.FEATURE_CAMERA_FRONT)
         if (!isFlashAvailable) {
@@ -168,12 +184,21 @@ class MainActivity : AppCompatActivity() {
     private val torchCallback = object : CameraManager.TorchCallback() {
         override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
             super.onTorchModeChanged(cameraId, enabled)
+            updateTorchStateInService(context = this@MainActivity, enabled)
             if (isFlashlightOn != enabled) {
                 switchFlashLight()
             }
             // Update your flashlight state here
             isFlashlightOn = enabled
         }
+    }
+
+    fun updateTorchStateInService(context: Context, isTorchOn: Boolean) {
+        val intent = Intent(context, TorchService::class.java).apply {
+            action = "UPDATE_NOTIFICATION"
+            putExtra("TORCH_STATE", isTorchOn)
+        }
+        ContextCompat.startForegroundService(context, intent)
     }
 
     override fun onResume() {

@@ -19,3 +19,8 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+# For Google Mobile Ads
+-keep public class com.google.android.gms.ads.** { public *; }
+-dontwarn com.google.android.gms.ads.**
