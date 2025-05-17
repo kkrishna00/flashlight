@@ -9,9 +9,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a6c01d5-a257-4988-a410-0e0023ae9b7a" name="Changes" comment="code : upgrade to sdk 35">
+    <list default="true" id="0a6c01d5-a257-4988-a410-0e0023ae9b7a" name="Changes" comment="code : fix flashlight sync issue">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FlashLight/src/main/java/com/stringsAttached/flashlight/ui/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/FlashLight/src/main/java/com/stringsAttached/flashlight/ui/MainActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/FlashLight/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/FlashLight/build.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +35,11 @@
       </list>
     </option>
   </component>
+  <component name="GenerateSignedApkSettings">
+    <option name="KEY_STORE_PATH" value="$USER_HOME$/Documents/PlayStoreKeys/Flashlight.jks" />
+    <option name="KEY_ALIAS" value="flashlight" />
+    <option name="REMEMBER_PASSWORDS" value="true" />
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -51,6 +56,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Android App.FlashLight.executor": "Run",
+    "BundleExportedModule": "FlashLight.FlashLight",
+    "ExportBundle.BundlePathForFlashLight.FlashLight": "/Users/kumar.krishna/AndroidStudioProjects/flashlight/FlashLight",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
@@ -59,6 +66,11 @@
     "cidr.known.project.marker": "true",
     "com.google.services.firebase.aqiPopupShown": "true",
     "git-widget-placeholder": "main"
+  },
+  "keyToStringList": {
+    "ExportApk.BuildVariants": [
+      "release"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -263,7 +275,15 @@
       <option name="project" value="LOCAL" />
       <updated>1747511349089</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="code : fix flashlight sync issue">
+      <option name="closed" value="true" />
+      <created>1747511894981</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1747511894981</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -280,6 +300,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="code : update" />
     <MESSAGE value="code : upgrade to sdk 35" />
-    <option name="LAST_COMMIT_MESSAGE" value="code : upgrade to sdk 35" />
+    <MESSAGE value="code : fix flashlight sync issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="code : fix flashlight sync issue" />
   </component>
 </project>
