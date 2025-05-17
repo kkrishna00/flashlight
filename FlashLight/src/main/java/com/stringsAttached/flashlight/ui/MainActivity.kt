@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.view.View
@@ -11,8 +12,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.MobileAds
 import com.stringsAttached.flashlight.R
@@ -25,8 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var cameraManager: CameraManager
 
     private lateinit var cameraId: String
-
-    private var isChecked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,8 +115,7 @@ class MainActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         binding.flashLight.setOnClickListener {
-            isChecked = !isChecked
-            switchFlashLight(isChecked)
+            switchFlashLight()
         }
     }
 
@@ -132,10 +128,10 @@ class MainActivity : AppCompatActivity() {
         alert.show()
     }
 
-    private fun switchFlashLight(status: Boolean) {
+    private fun switchFlashLight() {
         try {
-            cameraManager.setTorchMode(cameraId, status)
-            if (status) {
+            toggleFlashlight()
+            if (isFlashlightOn) {
                 binding.root.setBackgroundColor(this.resources.getColor(R.color.white))
                 binding.title.visibility = View.GONE
             } else {
@@ -145,5 +141,48 @@ class MainActivity : AppCompatActivity() {
         } catch (e: CameraAccessException) {
             e.printStackTrace()
         }
+    }
+
+    private var isFlashlightOn = false
+
+    private fun toggleFlashlight() {
+        val cameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+        val cameraId = cameraManager.cameraIdList.firstOrNull {
+            cameraManager.getCameraCharacteristics(it)
+                .get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == true
+        } ?: return
+
+        try {
+            if (isFlashlightOn) {
+                cameraManager.setTorchMode(cameraId, false)
+                isFlashlightOn = false
+            } else {
+                cameraManager.setTorchMode(cameraId, true)
+                isFlashlightOn = true
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private val torchCallback = object : CameraManager.TorchCallback() {
+        override fun onTorchModeChanged(cameraId: String, enabled: Boolean) {
+            super.onTorchModeChanged(cameraId, enabled)
+            if (isFlashlightOn != enabled) {
+                switchFlashLight()
+            }
+            // Update your flashlight state here
+            isFlashlightOn = enabled
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        cameraManager.registerTorchCallback(torchCallback, null)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        cameraManager.unregisterTorchCallback(torchCallback)
     }
 }
